@@ -1,0 +1,422 @@
+ 
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LPR VOIP:  10 10 10 20 20 20 30 30 30 
+LPR VOIP:  0.000001 
+DATE(month/day/year): 04/10/2009, TIME: 15:27:53
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 3.920, avg_delay: 0.026, avg_loss: 0.015
+avg mos: 4.135, avg_delay: 0.002, avg_loss: 0.000
+avg mos: 4.137, avg_delay: 0.004, avg_loss: 0.0
+
+avg mos: 1.219, avg_delay: 0.090, avg_loss: 0.415
+avg mos: 1.270, avg_delay: 0.094, avg_loss: 0.390
+avg mos: 1.527, avg_delay: 0.077, avg_loss: 0.329
+
+avg mos: 1.228, avg_delay: 0.166, avg_loss: 0.562
+avg mos: 1.361, avg_delay: 0.167, avg_loss: 0.572
+avg mos: 1.375, avg_delay: 0.167, avg_loss: 0.532
+ 
+  
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LPR VOIP:  10 10 10 20 20 20 30 30 30 
+LPR VOIP:  0.000001 
+DATE(month/day/year): 04/12/2009, TIME: 22:41:35
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 3.886, avg_delay: 0.016, avg_loss: 0.018
+avg mos: 4.137, avg_delay: 0.004, avg_loss: 0.0
+avg mos: 4.059, avg_delay: 0.012, avg_loss: 0.005
+avg mos: 1.562, avg_delay: 0.076, avg_loss: 0.295
+avg mos: 1.492, avg_delay: 0.086, avg_loss: 0.319
+avg mos: 1.319, avg_delay: 0.088, avg_loss: 0.372
+avg mos: 1.202, avg_delay: 0.188, avg_loss: 0.552
+avg mos: 1.194, avg_delay: 0.178, avg_loss: 0.540
+avg mos: 1.403, avg_delay: 0.158, avg_loss: 0.527
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  10 10 10 20 20 20 30 30 30 
+AFR VOIP:  0.00001 
+DATE(month/day/year): 04/12/2009, TIME: 22:47:32
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.133, avg_delay: 0.006, avg_loss: 0.000
+avg mos: 4.130, avg_delay: 0.006, avg_loss: 0.000
+avg mos: 4.137, avg_delay: 0.007, avg_loss: 0.0
+
+avg mos: 1.017, avg_delay: 0.069, avg_loss: 0.560
+avg mos: 1.063, avg_delay: 0.049, avg_loss: 0.520
+avg mos: 1.183, avg_delay: 0.037, avg_loss: 0.442
+
+avg mos: 1.083, avg_delay: 0.051, avg_loss: 0.644
+avg mos: 1.029, avg_delay: 0.049, avg_loss: 0.652
+avg mos: 1.001, avg_delay: 0.043, avg_loss: 0.662
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  10 10 10 20 20 20 30 30 30 
+AFR VOIP:  0.000001 
+DATE(month/day/year): 04/12/2009, TIME: 22:47:32
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+avg mos: 4.122, avg_delay: 0.006, avg_loss: 0.001
+avg mos: 4.056, avg_delay: 0.010, avg_loss: 0.005
+avg mos: 4.128, avg_delay: 0.004, avg_loss: 0.000
+
+avg mos: 1.420, avg_delay: 0.023, avg_loss: 0.334
+avg mos: 1.111, avg_delay: 0.031, avg_loss: 0.460
+avg mos: 1.107, avg_delay: 0.034, avg_loss: 0.475
+
+avg mos: 1.005, avg_delay: 0.050, avg_loss: 0.676
+avg mos: 1.016, avg_delay: 0.040, avg_loss: 0.667
+ 
+ 
+ 
+
+ 
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RIPPLE VOIP:  10 10 10 20 20 20 30 30 30 
+RIPPLE VOIP:  0.000001 
+DATE(month/day/year): 04/12/2009, TIME: 22:59:21
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.137, avg_delay: 0.001, avg_loss: 0.0
+avg mos: 4.127, avg_delay: 0.001, avg_loss: 0.000
+avg mos: 4.134, avg_delay: 0.001, avg_loss: 0.000
+
+avg mos: 2.844, avg_delay: 0.002, avg_loss: 0.110
+avg mos: 2.822, avg_delay: 0.002, avg_loss: 0.110
+avg mos: 2.943, avg_delay: 0.002, avg_loss: 0.095
+
+avg mos: 2.365, avg_delay: 0.015, avg_loss: 0.185
+avg mos: 2.094, avg_delay: 0.020, avg_loss: 0.216
+avg mos: 2.420, avg_delay: 0.010, avg_loss: 0.168
+
+
+ 
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RIPPLE VOIP:  10 10 10 20 20 20 30 30 30 
+RIPPLE VOIP:  0.00001 
+DATE(month/day/year): 04/12/2009, TIME: 23:00:04
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.126, avg_delay: 0.001, avg_loss: 0.000
+avg mos: 4.137, avg_delay: 0.001, avg_loss: 0.0
+avg mos: 4.117, avg_delay: 0.001, avg_loss: 0.001
+
+avg mos: 3.278, avg_delay: 0.002, avg_loss: 0.067
+avg mos: 2.894, avg_delay: 0.001, avg_loss: 0.103
+avg mos: 2.435, avg_delay: 0.002, avg_loss: 0.156
+
+ 
+avg mos: 1.954, avg_delay: 0.019, avg_loss: 0.235
+avg mos: 1.742, avg_delay: 0.020, avg_loss: 0.263
+avg mos: 2.101, avg_delay: 0.020, avg_loss: 0.204
+avg mos: 2.175, avg_delay: 0.014, avg_loss: 0.206
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LPR VOIP:  10 10 10 20 20 20 30 30 30 
+LPR VOIP:  0.00001 
+DATE(month/day/year): 04/12/2009, TIME: 23:18:32
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.134, avg_delay: 0.004, avg_loss: 0.000
+avg mos: 3.825, avg_delay: 0.014, avg_loss: 0.022
+avg mos: 3.562, avg_delay: 0.018, avg_loss: 0.041
+avg mos: 1.191, avg_delay: 0.095, avg_loss: 0.428
+avg mos: 1.146, avg_delay: 0.093, avg_loss: 0.450
+avg mos: 1.393, avg_delay: 0.077, avg_loss: 0.347
+avg mos: 1.378, avg_delay: 0.158, avg_loss: 0.507
+avg mos: 1.262, avg_delay: 0.174, avg_loss: 0.558
+avg mos: 1.188, avg_delay: 0.166, avg_loss: 0.580
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  10 10 10 20 20 20 30 30 30 
+AFR VOIP:  0.00001 0.000001 
+DATE(month/day/year): 04/12/2009, TIME: 23:20:17
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.127, avg_delay: 0.005, avg_loss: 0.000
+avg mos: 4.128, avg_delay: 0.008, avg_loss: 0.000
+avg mos: 3.880, avg_delay: 0.013, avg_loss: 0.018
+avg mos: 1.117, avg_delay: 0.035, avg_loss: 0.463
+avg mos: 1.120, avg_delay: 0.041, avg_loss: 0.467
+avg mos: 1.141, avg_delay: 0.036, avg_loss: 0.450
+avg mos: 1.092, avg_delay: 0.030, avg_loss: 0.616
+avg mos: 1.013, avg_delay: 0.044, avg_loss: 0.662
+avg mos: 1.021, avg_delay: 0.062, avg_loss: 0.692
+avg mos: 4.124, avg_delay: 0.003, avg_loss: 0.000
+avg mos: 4.125, avg_delay: 0.005, avg_loss: 0.000
+avg mos: 4.111, avg_delay: 0.005, avg_loss: 0.001
+avg mos: 1.184, avg_delay: 0.029, avg_loss: 0.441
+avg mos: 1.530, avg_delay: 0.014, avg_loss: 0.319
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  20 20 20 30 30 30 
+AFR VOIP:  0.00001 0.000001 
+DATE(month/day/year): 04/12/2009, TIME: 23:21:02
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 1.122, avg_delay: 0.046, avg_loss: 0.474
+avg mos: 1.320, avg_delay: 0.023, avg_loss: 0.369
+avg mos: 1.095, avg_delay: 0.050, avg_loss: 0.517
+avg mos: 1.018, avg_delay: 0.064, avg_loss: 0.691
+avg mos: 1.010, avg_delay: 0.073, avg_loss: 0.690
+avg mos: 1.041, avg_delay: 0.040, avg_loss: 0.670
+avg mos: 1.157, avg_delay: 0.034, avg_loss: 0.450
+avg mos: 1.205, avg_delay: 0.029, avg_loss: 0.416
+avg mos: 1.221, avg_delay: 0.021, avg_loss: 0.405
+avg mos: 1.005, avg_delay: 0.048, avg_loss: 0.675
+avg mos: 1.033, avg_delay: 0.025, avg_loss: 0.579
+avg mos: 1.048, avg_delay: 0.030, avg_loss: 0.633
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  20 20 20 30 30 30 
+AFR VOIP:  0.00001 0.000001 
+DATE(month/day/year): 04/12/2009, TIME: 23:21:52
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 1.097, avg_delay: 0.045, avg_loss: 0.479
+avg mos: 1.274, avg_delay: 0.024, avg_loss: 0.394
+avg mos: 1.318, avg_delay: 0.020, avg_loss: 0.371
+avg mos: 1.095, avg_delay: 0.051, avg_loss: 0.653
+avg mos: 1.018, avg_delay: 0.043, avg_loss: 0.644
+avg mos: 1.004, avg_delay: 0.054, avg_loss: 0.651
+avg mos: 1.215, avg_delay: 0.025, avg_loss: 0.406
+avg mos: 1.289, avg_delay: 0.023, avg_loss: 0.395
+avg mos: 1.163, avg_delay: 0.025, avg_loss: 0.434
+avg mos: 1.010, avg_delay: 0.029, avg_loss: 0.603
+avg mos: 1.036, avg_delay: 0.035, avg_loss: 0.629
+avg mos: 1.016, avg_delay: 0.033, avg_loss: 0.620
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LPR VOIP:  20 20 20 30 30 30 
+LPR VOIP:  0.00001 0.000001
+DATE(month/day/year): 04/12/2009, TIME: 23:25:34
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 1.409, avg_delay: 0.084, avg_loss: 0.354
+avg mos: 1.159, avg_delay: 0.096, avg_loss: 0.440
+avg mos: 1.147, avg_delay: 0.092, avg_loss: 0.462
+
+avg mos: 1.167, avg_delay: 0.170, avg_loss: 0.541
+avg mos: 1.410, avg_delay: 0.171, avg_loss: 0.534
+avg mos: 1.279, avg_delay: 0.155, avg_loss: 0.563
+
+avg mos: 1.309, avg_delay: 0.085, avg_loss: 0.380
+avg mos: 1.191, avg_delay: 0.098, avg_loss: 0.427
+avg mos: 1.587, avg_delay: 0.080, avg_loss: 0.297
+
+avg mos: 1.386, avg_delay: 0.158, avg_loss: 0.516
+avg mos: 1.304, avg_delay: 0.179, avg_loss: 0.563
+ 
+ 
+  
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RIPPLE VOIP:  10 10 10 20 20 20 30 30 30 
+RIPPLE VOIP:  0.000001 
+DATE(month/day/year): 04/13/2009, TIME: 15:24:22
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.127, avg_delay: 0.251, avg_loss: 0.000
+avg mos: 4.136, avg_delay: 0.251, avg_loss: 0.000
+avg mos: 4.129, avg_delay: 0.251, avg_loss: 0.000
+avg mos: 3.169, avg_delay: 0.252, avg_loss: 0.078
+avg mos: 2.963, avg_delay: 0.252, avg_loss: 0.096
+avg mos: 3.218, avg_delay: 0.251, avg_loss: 0.072
+avg mos: 2.197, avg_delay: 0.259, avg_loss: 0.214
+avg mos: 2.167, avg_delay: 0.259, avg_loss: 0.203
+avg mos: 1.859, avg_delay: 0.260, avg_loss: 0.247
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  10 10 10 20 20 20 30 30 30 
+AFR VOIP:  0.000001 
+DATE(month/day/year): 04/13/2009, TIME: 15:26:37
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.111, avg_delay: 0.257, avg_loss: 0.001
+avg mos: 4.135, avg_delay: 0.255, avg_loss: 0.000
+avg mos: 4.077, avg_delay: 0.257, avg_loss: 0.004
+avg mos: 1.222, avg_delay: 0.267, avg_loss: 0.410
+avg mos: 1.578, avg_delay: 0.262, avg_loss: 0.305
+avg mos: 1.292, avg_delay: 0.268, avg_loss: 0.378
+avg mos: 1.006, avg_delay: 0.277, avg_loss: 0.676
+avg mos: 0.994, avg_delay: 0.276, avg_loss: 0.627
+avg mos: 1.014, avg_delay: 0.282, avg_loss: 0.682
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RIPPLE VOIP:  10 10 10 20 20 20 30 30 30 
+RIPPLE VOIP:  0.000001 
+DATE(month/day/year): 04/13/2009, TIME: 15:28:24
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+RIPPLE VOIP:  10 10 10 20 20 20 30 30 30 
+RIPPLE VOIP:  0.000001 
+DATE(month/day/year): 04/13/2009, TIME: 15:28:27
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.135, avg_delay: 0.126, avg_loss: 0.000
+avg mos: 4.134, avg_delay: 0.126, avg_loss: 0.000
+avg mos: 4.137, avg_delay: 0.126, avg_loss: 0.0
+avg mos: 3.037, avg_delay: 0.127, avg_loss: 0.091
+avg mos: 2.610, avg_delay: 0.127, avg_loss: 0.138
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AFR VOIP:  10 10 10 20 20 20 30 30 30 
+AFR VOIP:  0.000001 
+DATE(month/day/year): 04/13/2009, TIME: 15:28:50
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 4.132, avg_delay: 0.129, avg_loss: 0.000
+avg mos: 4.130, avg_delay: 0.131, avg_loss: 0.000
+avg mos: 4.137, avg_delay: 0.130, avg_loss: 0.0
+avg mos: 1.25, avg_delay: 0.150, avg_loss: 0.400
+avg mos: 1.181, avg_delay: 0.149, avg_loss: 0.432
+avg mos: 1.294, avg_delay: 0.143, avg_loss: 0.382
+avg mos: 1.051, avg_delay: 0.157, avg_loss: 0.645
+avg mos: 1.022, avg_delay: 0.149, avg_loss: 0.678
+avg mos: 1.019, avg_delay: 0.161, avg_loss: 0.701
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LPR VOIP:  10 10 10 20 20 20 30 30 30 
+LPR VOIP:  0.00001 0.000001
+DATE(month/day/year): 04/13/2009, TIME: 15:30:04
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 3.255, avg_delay: 0.146, avg_loss: 0.066
+avg mos: 4.003, avg_delay: 0.134, avg_loss: 0.009
+avg mos: 4.069, avg_delay: 0.127, avg_loss: 0.004
+avg mos: 1.206, avg_delay: 0.203, avg_loss: 0.431
+avg mos: 1.713, avg_delay: 0.187, avg_loss: 0.266
+avg mos: 1.251, avg_delay: 0.201, avg_loss: 0.404
+avg mos: 1.195, avg_delay: 0.198, avg_loss: 0.651
+ 
+ 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+LPR VOIP:  10 10 10 20 20 20 30 30 30 
+LPR VOIP:  0.000001
+DATE(month/day/year): 04/13/2009, TIME: 15:30:22
+rate: 6 Mbps
+run: 10 seconds
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+ 
+ 
+avg mos: 3.726, avg_delay: 0.150, avg_loss: 0.029
+avg mos: 3.985, avg_delay: 0.133, avg_loss: 0.011
+avg mos: 3.842, avg_delay: 0.135, avg_loss: 0.021
+avg mos: 1.371, avg_delay: 0.198, avg_loss: 0.360
+avg mos: 1.111, avg_delay: 0.208, avg_loss: 0.475
+avg mos: 1.193, avg_delay: 0.203, avg_loss: 0.429
+avg mos: 1.090, avg_delay: 0.202, avg_loss: 0.741
+avg mos: 1.063, avg_delay: 0.206, avg_loss: 0.759
+avg mos: 0.999, avg_delay: 0.215, avg_loss: 0.869

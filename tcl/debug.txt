@@ -1,0 +1,1116 @@
+1. The data-part of a RIPPLE frame DOES contain NS pkts.
+2. BER: when forwarders get a partically corrupted frame, they should forward the correct parts, should they? 
+
+3. Advantages of network coding: all coded frames are the same, so losing some of them is OK, as long as the rest are transmitted enough number of times. In comparison, sending un-coded frames is not, losing a frame means it has to be retransmitted. For example, the src sends 4 pkts to the dst via multihop. Say forwarder 1 receives 2 correctly, then it should forward these two and wait for the src to retransmit the corrupted two. With network coding however, forwarder 1 can simply send 4 copies of the correct part and the dst can decoded all of them. Is this true?????????????????? Is this the Sigcomm paper combing network coding and partial retransmission????????????????
+
+4. For now, forwarders retransmit correct pkts only, which results in shorter frame being relayed.
+
+5. After forwarding, forwarders should free forwarded pkts in data_daemon......
+
+6. A problem: at the moment, high priority forwarders sent first, low prio forwarders cancel theirs if they overhear high prio tx. BUT, high prio nodes normally receive less correct pkts, doing this seems not effective??????????????????? try this first see what will happen, otherwise have to think about partial coding.......
+
+7. ACK bitmap is removed, use pIDs only.
+
+8. For now, still assume that hidden nodes can exist, i.e., doug's assumption is not used.
+
+9. BER: MAC data hdr = 191*8, MAC ACK = 131*8, errors happen on everywhere, be it MAC data frame, MAC data frame headers, MAC ACKs
+
+10. Rq: only in-order packets are passed to upper layer....
+
+11. Rq: if keep corrupted pkts, then it is possible that they are discarded by the source after retxing for more than retry_limit times.....set retry_limit to 11 for now to make this impossible......
+
+12. Found a problem when debugging AFR (actually ripple with forwarders=2, and hops are two). The problem is that when losses happen on MAC ACKs, duplicates and reordering can happen a lot. To deal with this, I decided to do selective ACK in this way: the destination sends a MAC ACK with only one pID which is the largest correctly-received packet ID. When the source receives the MAC ACK, it should drops all packets whose IDs are <= this PID!!!!
+
+==============================================================
+preEXOR
+==============================================================
+
+13: for preEXOR: for high priority forwarders, after sending a MAC ACK and before backing off for new packets, they should defer enough long time to allow low priority forwarders to finish sending their MAC ACKs...
+
+14. The problem is preExOR is reordering. Say 4609 is received by 2 but 4610 can be received by 3, then when 3 is sending MAC ACK, 2 will remove 4609 from its Sq......I should add a Rq at 3 and let 2 keep sending 4609, and let the Rq at 3 do the ordering..........
+
+
+
+
+
+
+
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+
+
+
+==============================================================
+==============================================================
+BER = 0.0000 MCExOR  PHY=216/54
+==============================================================
+==============================================================
+
+
+   0      1       2       3
+   o------y-------n-------y-->   SYN         
+<--y------y-------y-------o      MAC ACK
+<--n------y-------y-------o      SYN ACK
+   y      o-------y-------y-->   MAC ACK
+<--y------o       y       y      SYN ACK
+   o------y-------y-------y-->   MAC ACK
+   o------y-------n-------y-->   TCP data 2
+<--n------y-------y-------o      MAC ACK
+<--y------y-------y-------o      TCP ACK 4
+   o------y-------n-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK         COLLISION
+<--y------y-------y-------o      TCP ACK 4
+   o------y-------y-------y-->   MAC ACK
+   o------y-------y-------y-->   TCP data 2      DUPLICATE      
+<--y------y-------y-------o      MAC ACK
+   o------y-------n-------y-->   TCP data 3
+<--n------y-------y-------o      MAC ACK
+............
+   o------y-------y-------y-->   TCP data 14
+<--n------y-------y-------o      MAC ACK
+<--n------y-------y-------o      TCP ACK  18
+............
+   o------y-------y-------n-->   TCP data 14     RETRY 1
+<--n------y-------y-------o      TCP ACK  19     COLLISION
+.........
+   o------y-------y-------n-->   TCP data 14     RETRY 1
+<--y------y-------o       y      MAC ACK
+.........
+   o------y-------y-------n-->   TCP data 21
+<--n------y-------o       y      MAC ACK
+......
+   o------y-------y-------n-->   TCP data 21
+<--n------y-------o       y      MAC ACK
+........
+<--n------y-------y-------o      TCP ACK  67
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+==============================================================
+
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.0000 preExOR
+==============================================================
+==============================================================
+
+   0      1       2       3
+   o------y-------n-------y-->   SYN
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--y------y-------y-------o      SYN ACK
+   o------y-------y-------y-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 2, 3
+<--y------y-------o       y      MAC ACK
+<--y------o       n       y      MAC ACK
+   n      y       o-------y-->   TCP data 2, 3
+<--y------y-------y-------o      MAC ACK
+<--y------y-------y-------o      TCP ACK 4, 5
+   o------y-------y-------y-->   MAC ACK
+   y      o-------n-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 6-9
+<--n------y-------o       y      MAC ACK
+<--y------o       y       y      MAC ACK
+   y      y       o-------y-->   TCP data 6-9
+<--y------y-------y-------o      MAC ACK
+<--n------y-------y-------o      TCP ACK 10-13
+   y      o-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+<--y------o       y       y      TCP ACK 10-13
+   o------y-------y-------y-->   MAC ACK
+   o------y-------y-------y-->   TCP data 14-21
+<--y------y-------y-------o      MAC ACK
+<--n------y-------o       y      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 22-29
+   y      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+<--y------o       y       y      TCP ACK 22-29
+   o------y-------n-------n-->   MAC ACK
+   o------y-------n-------n-->   TCP data 30-45
+<--y------o       y       y      MAC ACK
+   y      o-------y-------n-->   TCP data 30-45
+<--y------y-------o       y      MAC ACK
+   y      y       o-------y-->   TCP data 30-45
+<--n------y-------y-------o      MAC ACK
+<--n------y-------y-------o      TCP ACK 46-61
+   y      o-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+<--y------o       y       y      TCP ACK 46-61
+   o------y-------n-------n-->   MAC ACK
+   o------y-------n-------y-->   TCP data 62-77
+<--y------y-------y-------o      MAC ACK 
+<--y------o       y       y      MAC ACK
+   o------y-------n-------n-->   TCP data 78-81     COLLISION
+<--n------y-------y-------o      TCP ACK  82-97     COLLISION
+   y      n       o-------y-->   MAC ACK
+<--y------y-------o       y      TCP ACK  82-97     0/1 can not hear, has finish sending yet
+<--y------y-------o       y      TCP ACK  82-97
+   o------y-------y-------n-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   o------y-------y-------y-->   TCP data 78-81, 98-109
+<--n------y-------y-------o      MAC ACK 
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK
+   o------y-------y-------y-->   TCP data 110-113
+<--y------y-------y-------o      MAC ACK 
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK  114-129
+   y      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+<--y------y-------y-------o      TCP ACK  130-133
+   o------y-------y-------n-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 134-149
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK
+
+...................
+   o------y-------y-------n-->   TCP data 814-829
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK
+   o------y-------y-------n-->   TCP data 830-833
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK
+.....................
+   o------y-------n-------y-->   TCP data 2191-2201
+<--n------n-------y-------o      MAC ACK 
+<--y------o       y       y      MAC ACK
+   y      o-------y-------n-->   TCP data 2191-2201
+<--y------y-------y-------o      TCP ACK  2202-2212    COLLISION
+<--y------y-------y-------o      TCP ACK  2202-2212
+<--y------y-------y-------o      TCP ACK  2202-2212
+<--n------y-------y-------o      TCP ACK  2202-2212
+<--n------y-------y-------o      TCP ACK  2202-2212
+   y      o-------y-------y-->   MAC ACK    
+   n      y       o-------y-->   MAC ACK
+   y      o-------y-------n-->   TCP data 2191-2201     Link delay
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       n      TCP ACK  2202-2212
+   y      y       o-------y-->   TCP data 2191-2201     COLLISION
+<--y------y-------y-------o      MAC ACK 
+<--n------y-------y-------o      TCP ACK  2213-2223     COLLISION
+   y      o-------y-------y-->   MAC ACK    
+   y      y       o-------y-->   MAC ACK
+<--y------o       y       n      TCP ACK  2202-2217
+   o------y-------y-------n-->   MAC ACK
+   o------y-------n-------n-->   TCP data 2224-2238
+
+...............
+
+   o------y-------y-------n-->   TCP data 3340-3351
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK  
+   y      y       o-------y-->   TCP data 3340-3351
+<--y------y-------y-------o      MAC ACK 
+<--y------y-------y-------o      TCP ACK  3352-3363
+   o------n-------y-------n-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK    
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 3364-3376
+<--y------o       y       y      MAC ACK  
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.00001 preExOR
+==============================================================
+==============================================================
+
+   0      1       2       3
+   o------n-------n-------y-->   SYN         MAC HDR is lost at 1
+<--y------y-------y-------o      MAC ACK
+<--n------y-------y-------o      SYN ACK
+   y      o-------y-------y-->   MAC ACK    
+   y      y       o-------y-->   MAC ACK    
+<--y------o       y       y      SYN ACK
+   o------y-------n-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP DATA  2,3
+<--y------y-------o       y      MAC ACK 
+<--y------o       n       y      MAC ACK  
+   n      y       o-------y-->   TCP DATA  2,3
+<--y------y-------y-------o      MAC ACK
+<--y------y-------y-------o      TCP ACK  4, 5
+   o------y-------y-------y-->   MAC ACK
+   y      o-------n-------y-->   MAC ACK    
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP DATA 6-9          
+<--n------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK  8
+   o------y-------y-------y-->   TCP DATA 9
+<--n------n-------y-------o      MAC ACK    MAC hdr is lost at 0 and 1
+<--n------y-------o       y      MAC ACK 
+
+1 should send MAC ACK ?????????
+
+<--y------y-------y-------o      TCP ACK  10
+   o------y-------y-------y-->   MAC ACK
+
+
+..................
+   o------y-------y-------n-->   TCP data 487-491
+<--y------y-------y-------o      MAC ACK 
+<--y------y-------o       y      MAC ACK 
+<--y------o       y       y      MAC ACK  
+   y      o-------y-------y-->   TCP data 488-491
+<--y------y-------y-------o      MAC ACK 
+<--y------y-------y-------o      TCP ACK  492-496 ???????? TOO EARLY
+
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.0000 preExOR  PHY=216
+==============================================================
+==============================================================
+
+
+   0      1       2       3
+   o------y-------n-------y-->   SYN         
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--y------y-------y-------o      SYN ACK
+   o------y-------y-------y-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 2, 3
+<--y------y-------o       y      MAC ACK
+.........................
+
+<--y------y-------y-------o      TCP ACK  795-810
+   o------y-------y-------y-->   MAC ACK
+   n      o-------y-------n-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+<--n------y-------y-------o      TCP ACK  811-813                     now=0.084120, txtill=0.084156
+   o------y-------y-------y-->   TCP data 814-829      HTP COLLISION  now=0.084157
+<--y------y-------y-------o      MAC ACK 829
+
+
+.......................
+   o------y-------y-------n-->   TCP data 830-833
+<--y------n-------y-------o      TCP ACK  834-849       COLLISION
+<--y------o       y       n      MAC ACK
+   y      o-------y-------n-->   TCP data 830-833
+<--y------y-------y-------o      TCP ACK  834-849       COLLISION
+
+..................
+<--n------n-------y-------o      TCP ACK  2261,2279-2293
+   y      y       o-------y-->   MAC ACK
+   n      y       o-------y-->   TCP DATA 2278
+<--n      y       y-------o      MAC ACK 
+<--y------y-------y-------o      TCP ACK  2294,2295
+   o------y-------y-------n-->   MAC ACK  
+   y      o-------y-------y-->   MAC ACK  
+   y      y       o-------y-->   MAC ACK
+   o------y-------n-------n-->   TCP data 2296-2311
+<--y------o       n       n      MAC ACK 2311
+   o------y-------n-------n-->   TCP data 2312, 2313
+<--y------o       n       n      MAC ACK
+..................
+
+<--n------n-------y-------o      TCP ACK  9320-9323
+<--y------o       y       y      TCP ACK  9304-9319   COLLISION
+   o------y-------y-------y-->   MAC ACK  9319
+<--n------y-------y-------o      TCP ACK  9320-9323
+   o------y-------y-------n-->   TCP data 9324-9339   COLLISION now=0.872627 txtill=0.873287
+   y      o-------n-------y-->   MAC ACK  9323                  now=0.872632
+   y      y       o-------y-->   MAC ACK  9323                  now=0.872686      WRONG????
+
+----------------------------
+   o------y-------y-------n-->   TCP data 11818-11822
+<--y------y-------o       y      MAC ACK
+<--y------o       y       y      MAC ACK
+<--y------y-------o       y      TCP ACK  11814-11817
+   o------y-------y-------y-->   MAC ACK 
+   y      o-------n-------y-->   MAC ACK 
+   n      y       o-------y-->   TCP DATA 11818-11822
+   o------y-------n-------n-->   TCP data 11823           COLLISION
+<--n------y-------y-------o      MAC ACK  11822
+<--n------y-------y-------o      TCP data 11824-11828
+   n      o-------y-------y-->   MAC ACK 
+   n      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 11823     now=1.744083, txtill=1.744151      
+<--y------o       y       y      MAC ACK            now=1.744185, txtill=1.744221 
+                                                    ???????? 2 should start first?????
+
+
+
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.0000 preExOR  PHY=216   1 frag per frame
+==============================================================
+==============================================================
+
+
+   0      1       2       3
+   o------y-------n-------y-->   SYN         
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--y------y-------y-------o      SYN ACK
+   o------y-------y-------y-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 2
+<--y------y-------o       y      MAC ACK
+<--y------o       n       y      MAC ACK
+   n      y       o-------y-->   TCP data 2
+<--y------y-------y-------o      MAC ACK
+   o------y-------y-------y-->   TCP data 3
+<--y------y-------y-------o      MAC ACK
+<--y------y-------o       y      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 4
+   y      o-------y-------n-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+<--n------y-------y-------o      TCP ACK 4
+   o------y-------y-------y-->   MAC ACK
+   y      o-------y-------n-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+
+...................
+   o------y-------y-------n-->   TCP data 299 now=0.573209, txtill=0.573273, to=0.573509
+<--n------y-------y-------o      TCP ACK  301 now=0.573310, txtill=0.573338   HTP COLLISION
+   y      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+   n      o-------y-------n-->   TCP data 299 now=0.573776
+<--y------y-------o       y      MAC ACK                 1 removed 299 from Sq!!!!!
+   o------y-------y-------y-->   TCP data 300            2 removed 299 because heard MAC ACK for 300
+<--y------y-------y-------o      MAC ACK
+<--n------y-------o       y      MAC ACK                     
+<--y------o       y       y      MAC ACK
+.............
+299, 308 and 312 are lost, so src slow start.........why 299 is lost? why 2 does not rely it??????
+..............
+   o------y-------y-------n-->   TCP data 308
+<--y------y-------o       y      MAC ACK     1 removed 308 because hears 2's MAC ACK                 
+<--y------o       y       n      MAC ACK
+   y      y       o-------y-->   TCP data 307
+<--y------y-------y-------o      MAC ACK
+<--n------y-------y-------o      TCP ACK 309
+   y      o-------y-------n-->   MAC ACK      2 removed 308????
+   y      y       o-------y-->   MAC ACK
+<--y------o       y       y      TCP ACK 309  ? why 1 does not forward 308???
+
+.............
+   o------y-------y-------y-->   TCP data 310
+<--y------y-------y-------o      MAC ACK
+<--y------y-------o       y      MAC ACK                     
+<--y------o       y       y      MAC ACK
+
+
+
+
+
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.0000 RIPPLE
+==============================================================
+==============================================================
+
+   0      1       2       3
+   o------y-------n-------y-->   SYN
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--n------y-------y-------o      SYN ACK
+<--y------o       y       y      SYN ACK
+   o------y-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 2, 3
+   y      y       o-------y-->   TCP data 2, 3
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--y------n-------y-------o      TCP ACK 4, 5
+   o------y-------y-------n-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------n-------y-->   TCP data 6 -- 9
+<--n------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------n-------y-------o      TCP ACK 10 -- 13
+<--y------y-------o       y      TCP ACK 10 -- 13
+   o------y-------n-------y-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 14 -- 21
+   y      y       o-------y-->   TCP data 14 -- 21
+<--n------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--y------y-------y-------o      TCP ACK 22 -- 29             1
+   o------y-------n-------n-->   MAC ACK
+<--n------y-------o       y      TCP ACK 22 -- 29             
+   o------y-------n-------n-->   TCP data 30 -- 45                      1
+<--n------y-------y-------o      TCP ACK 22 -- 29             2  should I stop retx now??
+<--c------y-------o       y      TCP ACK 22 -- 29             
+<--n------y-------y-------o      TCP ACK 22 -- 29             3
+<--n------y-------o       y      TCP ACK 22 -- 29
+<--n------y-------y-------o      TCP ACK 22 -- 29             4      
+<--n------y-------o       y      TCP ACK 22 -- 29
+   o------y-------n-------n-->   TCP data 30 -- 45                      2
+<--n------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 46 -- 61
+<--y------o       y       y      TCP ACK 46 -- 61
+   o------y-------n-------n-->   MAC ACK
+   y      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+   o------y-------n-------n-->   TCP data 62-77
+   y      o-------y-------y-->   TCP data 62-77
+<--y------n-------y-------o      MAC ACK
+<--y------y-------o       y      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 82 -- 97
+<--y------o       y       y      TCP ACK 82 -- 97
+   o------n-------y-------n-->   MAC ACK
+
+
+
+
+
+
+
+
+
+
+
+   y      y       o-------y-->   MAC ACK
+   o------y-------n-------n-->   TCP data 78-81, 98-109
+   y      o-------y-------y-->   TCP data 78-81, 98-109
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 114-129
+<--y------o       y       y      TCP ACK 114-129
+..................................
+..................................
+..................................
+..................................
+..................................
+..................................
+   o------y-------n-------n-->   TCP data 366-375, 392,393, 410, 427-429
+   y      o-------n-------y-->   TCP data 366-375, 392,393, 410, 427-429
+<--n------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 435-450
+<--y------o       y       y      TCP ACK 435-450
+   o------y-------n-------n-->   MAC ACK
+   n      o-------n-------n-->   MAC ACK
+   o------y-------y-------y-->   TCP data 430-434, 451-454
+<--n------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------y-------y-------o      TCP ACK 435-450
+<--y------o       y       y      TCP ACK 435-450
+   o------y-------y-------n-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.00001 RIPPLE
+==============================================================
+==============================================================
+
+   0      1       2       3
+   o------y-------n-------y-->   SYN
+<--y------y-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--n------y-------y-------o      SYN ACK, but 2 and 1 get 0 pkt correctly
+<--y------o       y       y      SYN ACK
+   o------y-------y-------y-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 2, 3. 
+   y      y       o-------y-->   TCP data 2
+<--n------n-------y-------o      MAC ACK
+<--y------o       y       n      MAC ACK
+<--y------n-------y-------o      TCP ACK 4, 5, 1 gets both, 2 gets both
+   o------y-------y-------n-->   MAC ACK
+   y      y       o-------y-->   MAC ACK
+   o------y-------n-------y-->   TCP data 6--9
+<--n------y-------y-------o      MAC ACK
+<--y------o       y       y      MAC ACK
+<--n------n-------y-------o      TCP ACK 10-13
+<--y------y-------o       y      TCP ACK 10-13
+   o------y-------n-------y-->   MAC ACK
+   n      o-------y-------y-->   MAC ACK
+   n      y       o-------y-->   MAC ACK
+   o------y-------y-------n-->   TCP data 14-21, 2 gets 15-18, 20, 21
+   y      y       o-------y-->   TCP data 15-18, 20, 21, BUT, 3 receives a corrupted MAC hdr!!!!!
+   o------y-------y-------n-->   TCP data 14-21, 2 gets 14, 16-21
+   y      y       o-------y-->   TCP data 14, 16-21
+<--y------y-------y-------o      MAC ACK 14, 16-21
+<--y------o       y       y      MAC ACK
+   o------y-------y-------n-->   TCP data 15
+<--n------n-------y-------o      TCP ACK 23-28
+   y      o-------y-------n-->   TCP data 15
+<--n------n-------y-------o      TCP ACK 23-28
+   o------y-------y-------n-->   TCP data 15
+<--n------n-------y-------o      TCP ACK 23-28
+   y      o-------y-------y-->   TCP data 15
+<--n------n-------y-------o      MAC ACK
+<--y------y       o       y      MAC ACK
+<--y------o       y       y      MAC ACK
+<--y------y-------y-------o      TCP ACK 22-28
+   o------y-------y-------n-->   MAC ACK
+   n      n       o-------y-->   MAC ACK
+   y      o-------y-------n-->   MAC ACK
+   o------y-------y-------n-->   TCP data 30-36
+   n      y       o-------y-->   TCP data 30-32,34,36
+<--n------n-------y-------o      MAC ACK
+<--n------y       o       y      MAC ACK
+<--y------o       y       y      MAC ACK, BUT 0 gets a corrupted MAC ACK!!!!!!
+<--y------y-------y-------o      TCP ACK 37-39
+   o------y-------n-------y-->   MAC ACK
+<--n------y-------o       y      TCP ACK 37-39, COLLISION!!!!!!!!!!!
+   o------y-------y-------n-->   TCP data 30-36, 40-44
+<--n------y-------y-------o      TCP ACK 37-39, COLLISION!!!!!!!!!!!
+<--n------n-------y-------o      TCP ACK 37-39, COLLISION!!!!!!!!!!!
+<--y------y-------y-------o      TCP ACK 37-39, COLLISION!!!!!!!!!!!
+   o------y-------y-------n-->   TCP data 30-36, 40-44
+   n      y       o-------y-->   TCP data 30-36, 41-44
+<--n------y-------y-------o      MAC ACK, 30-36, 41, 42, 44               
+<--y------o       y       y      MAC ACK
+   o------n-------y-------n-->   TCP data 40, 43
+<--n------y-------y-------o      TCP ACK 45-53, COLLISION!!!!!!!!!!!
+<--n------o       y       n      TCP ACK 45-53, COLLISION!!!!!!!!!!!
+<--y------y-------y-------o      TCP ACK 45-53
+   o------y-------y-------y-->   MAC ACK 45-53 
+   y      y       o-------y-->   MAC ACK 45-53 
+   o------y-------y-------n-->   TCP data 40, 43, 54-56
+   n      y       o-------y-->   TCP data 40, 43, 54-56
+<--n------y-------y-------o      MAC ACK  40, 43, 54-56               
+<--y------o       y       y      MAC ACK  40, 43, 54-56 
+<--y------y-------y-------o      TCP ACK  57-62
+   o------y-------n-------n-->   MAC ACK  57-62
+<--n------y       o       y      TCP ACK  57-62, Inter-flow collision!!!!
+   o------y-------y-------n-->   TCP data 63-67
+<--n------y-------y-------o      TCP ACK  57-62
+<--y------y-------y-------o      TCP ACK  57-62
+<--y------n-------y-------o      TCP ACK  57-62, Retry out!!!!!!
+   o------y-------y-------y-->   TCP data 63-67
+<--y------y-------y-------o      MAC ACK  63-67        
+<--y------o       y       y      MAC ACK  63-67
+<--y------y-------y-------o      TCP ACK  68-72
+   o------y-------y-------y-->   MAC ACK  68-72
+   y      y       o-------y-->   MAC ACK  68-72
+   o------y-------y-------y-->   TCP data 73-78
+<--n------y-------y-------o      MAC ACK  73-78           
+<--y------o       y       n      MAC ACK  73-78   
+<--n------y-------y-------o      TCP ACK  79-84
+<--y------o       y       n      TCP ACK  79-84                  1785
+...........................
+...........................
+...........................
+   o------y-------y-------y-->   TCP data 135, 145, 156-166, n=13
+<--n------n-------y-------o      MAC ACK  135, 145, 156, 158-166, n=12
+   y      o-------y-------n-->   TCP data 135, 145, 156, 157, 159-163, 165, 166, n=11, Inter-flow COLL!!
+<--y------y-------y-------o      TCP ACK  167-169, COLLIDE with 1
+<--n------y-------y-------o      TCP ACK  167-169, COLLIDE with 1
+<--n------y-------y-------o      TCP ACK  167-169, COLLIDE with 1
+<--n------y-------y-------o      TCP ACK  167-169, COLLIDE with 1, Retry out!
+.....................
+.....................
+   o------y-------y-------n-->   TCP data 170, ERR on 2
+   y      o-------y-------n-->   TCP data 170
+   y      y       o-------y-->   TCP data 170
+<--n------y-------y-------o      MAC ACK  170
+   o------y-------y-------n-->   TCP data 170, Retx, Collide with MAC ACK from 3
+   o------y-------n-------y-->   TCP data 170
+<--y------n-------y-------o      MAC ACK  170
+   y      o-------y-------y-->   TCP data 170, Inter-flow collision!!!
+
+
+
+
+
+
+
+
+
+
+
+==============================================================
+==============================================================
+BER = 0.0000, RIPPLE. two flows, share 0, 1, 2, dsts are 3 and 4
+==============================================================
+==============================================================
+
+
+   0      1       2       3     4
+   o------y-------n-------y-->               SYN 0
+<--y------y-------y-------o                  MAC ACK
+<--y------o       y       n                  MAC ACK
+   o------y-------y-------------y-->         SYN 1
+<--y------n-------y-------------o            MAC ACK
+   y      o-------y-------------y-->         SYN  1     Internal collision
+<--y------n-------y-------o                  SYN ACK 2
+   o------y-------y-------n-->               MAC ACK
+<--y------y-------y-------------o            SYN ACK 3  Intra-flow collision
+   o------y-------n-------------y-->         SYN 1 Retx
+<--n------y-------y-------------o            MAC ACK
+<--y------o       y             n            MAC ACK
+   o------y-------y-------y-->               Data 4, 5
+<--y------y-------y-------y-----o            SYN ACK 3, 6 Collision
+<--y------y-------y-------y-----o            SYN ACK 3, 6 Retx
+<--y------y-------y-------y-----o            SYN ACK 3, 6 
+   o------y-------y-------n-----n-->         MAC ACK
+<--n------n-------y-------o                  SYN ACK 2 Retx
+   y      o-------y-------n-----y-->         MAC ACK 
+   o------y-------y-------y-----y-->         Data 7,8,9
+<--y------y-------y-------y-----o            MAC ACK, 7,8,9
+<--y------o       y       y     y            MAC ACK
+<--y------y-------y-------o     y            SYN ACK 2, 10, 11 Retx
+   o------y-------y-------y-->  n            MAC ACK 2, 10, 11
+   y      y       o-------y-->  y            MAC ACK
+<--n------y-------y-------y-----o            SYN ACK 3,6, 12-14
+   o------y-------n-------n-----y-->         Data 15-18 Collision
+<--n------y-------o       y     y            SYN ACK 3,6, 12-14
+
+
+
+
+====================================================================
+====================================================================
+216/54Mbps bugs
+BER = 0.00001, one flow, RIPPLE
+==============================================================
+==============================================================
+
+
+..................
+   0      1       2       3    
+   o------y-------n-------y-->         Data 292
+<--n------n-------y-------o            MAC ACK
+   n      o-------y-------y-->         Data 292
+   o------y-------y-------y-->         Data 292, Retry 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+====================================================================
+====================================================================
+Results 6Mbps Run 10 Seconds
+====================================================================
+====================================================================
+
+
+#Flow    RIPPLE(frags 1) RIPPLE(frags 16)         SPR
+1        1.1             2.06                   0.62         0 1 2 3
+2        1.13            1.71                   0.78         0 1 2 3 and 0 1 2 4
+3        1.1             1.40                   0.88         0 1 2 3, 0 1 2 4 and 5 6 1 7
+
+3        1.1             1.8                    0.68         3 * 0 1 2 3
+
+====================================================================
+====================================================================
+Results 216/54Mbps Run 10 Seconds
+====================================================================
+====================================================================
+
+
+#Flow    RIPPLE(frags 1) RIPPLE(frags 16)         SPR
+1        9.79             52.6                   1.32         0 1 2 3
+2        9.96             47.3                   2.23         0 1 2 3 and 0 1 2 4
+3        10.1             44.1                   3.58         0 1 2 3, 0 1 2 4 and 5 6 1 7
+
+
+
+
+====================================================================
+====================================================================
+Results 6Mbps Run 10 Seconds NO HTP
+====================================================================
+====================================================================
+
+
+#Flow    RIPPLE(frags 1) RIPPLE(frags 16)         SPR
+1        2.41            3.27                   0.71         0 1 2 3
+2        2.48            3.50                   0.97         0 1 2 3 and 0 1 2 4
+3        2.44            3.32                   1.14         0 1 2 3, 0 1 2 4 and 5 6 1 7
+
+
+
+====================================================================
+====================================================================
+Results 216/54Mbps Run 10 Seconds NO HTP
+====================================================================
+====================================================================
+
+
+#Flow    RIPPLE(frags 1) RIPPLE(frags 16)         SPR
+1        13.1            65.2                   1.35         0 1 2 3
+2        13.2            66.9                   2.40         0 1 2 3 and 0 1 2 4
+3        13.2            65.2                   3.78         0 1 2 3, 0 1 2 4 and 5 6 1 7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+====================================================================
+====================================================================
+Results 6Mbps Run 10 Seconds      BER 10^-5
+====================================================================
+====================================================================
+
+
+#Flow    RIPPLE(frags 1) RIPPLE(frags 16)         SPR
+1                        1.09                     0.40         0 1 2 3
+2                        1.10                     0.66         0 1 2 3 and 0 1 2 4
+3                        1.02                     0.88(great unfair)         0 1 2 3, 0 1 2 4 and 5 6 1 7  
+
+
+
+====================================================================
+====================================================================
+Results 216/54Mbps Run 10 Seconds      BER 10^-5
+====================================================================
+====================================================================
+
+
+#Flow    RIPPLE(frags 1) RIPPLE(frags 16)         SPR
+1                        9.4                      1.20         0 1 2 3
+2                                                 1.80         0 1 2 3 and 0 1 2 4
+3                        9.04                     3.05(great unfair)         0 1 2 3, 0 1 2 4 and 5 6 1 7  
+
+
+
+
+
+
+
+================================================================
+================================================================
+================================================================
+================================================================
+
+
+
+
+
+================================================================
+6Mbps, BER 10^-5, two stations, same location
+================================================================
+SPR            3.88Mbps
+AFR 16 frags,  4.5Mbps
+
+
+================================================================
+ 6Mbps: BER=10-5  HTP
+================================================================
+
+          SPR                    RIPPLE (1 frag in a frame)
+ 1       0.58091                1.11686
+ 2       0.69628                1.11351
+ 3       0.79895                1.0542
+
+
+     AFR (16 frags)         RIPPLE (16 frags in a frame)
+ 1       0.61                1.52
+ 2       0.71                1.63
+ 3       0.65                1.42 
+
+
+
+
+================================================================
+216/54Mbps, BER 10^-5, two stations, same location
+================================================================
+SPR            23.45Mbps
+AFR 16 frags,  99.6Mbps
+================================================================
+ 216/54Mbps: BER=10-5 HTP
+================================================================
+
+
+          SPR                    RIPPLE (1 frag in a frame)
+ 1       1.25004                7.61512
+ 2       1.96924                7.92558
+ 3       3.11073                8.01387
+
+
+
+     AFR (16 frags)         RIPPLE (16 frags in a frame)
+ 1       4.28                17.5
+ 2       5.18                21.3
+ 3       8.44                24.3
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================
+6Mbps, BER 10^-5, two stations, same location
+================================================================
+SPR            3.88Mbps
+AFR 16 frags,  3.71598Mbps
+
+
+================================================================
+ 6Mbps: BER=10-5  HTP
+================================================================
+
+          SPR                    RIPPLE (1 frag in a frame)
+ 1       0.64876                2.27 ??
+ 2       0.86080                2.34 ??
+ 3       1.08895                2.32 ??
+
+ 1.0542 = 0.32144   0.30617   0.42659
+
+
+     AFR (16 frags)         RIPPLE (16 frags in a frame)
+ 1       0.64283                2.51521
+ 2       0.66830                2.55595
+ 3       0.62426                2.58058
+
+
+
+
+
+================================================================
+216/54Mbps, BER 10^-5, two stations, same location
+================================================================
+SPR            23.5523Mbps
+AFR 16 frags,  86.5841Mbps
+================================================================
+ 216/54Mbps: BER=10-5 HTP
+================================================================
+
+
+          SPR                    RIPPLE (1 frag in a frame)
+ 1       1.28736                12.4283
+ 2       1.94887                12.5522
+ 3       3.27186                13.4566 
+
+     AFR (16 frags)         RIPPLE (16 frags in a frame)
+ 1       3.96533                17.881
+ 2       6.06677                27.4906
+ 3       9.19768                35.3126
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================
+======================================================
+======================================================
+======================================================
+SPR            3.88Mbps
+#AFR 16 frags,  3.71598Mbps
+
+======================================================
+6Mbps BER=10^-5, HTP
+======================================================
+
+LPR            0     3         0.58091
+SPR            0 1 2 3         1.06089
+ETX            0 1 3           1.24576
+ETX            0 2 3           1.23896
+RIPPLE 1  SPR  0 1 2 3         1.23382
+RIPPLE 16 SPR  0 1 2 3         1.61633
+
+!!AFR 16         0 1 2 3         0.88110
+!RIPPLE 16 ETX  0 1 3           1.58156
+!RIPPLE 16 ETX  0 2 3           1.24405    relay selection is important!!!
+
+#RIPPLE 1  ETX  0 1 3           1.26017
+#AFR 16         0 1 3           0.88536
+
+======================================================
+216/54Mbps BER=10^-5, HTP
+======================================================
+
+LPR            0     3         0.75646
+SPR            0 1 2 3         7.04098
+ETX            0 1 3           7.69395
+ETX            0 2 3           7.66087
+RIPPLE 1 SPR   0 1 2 3         7.89916 
+RIPPLE 16 SPR  0 1 2 3         17.5595
+
+!!AFR 16 SPR     0 1 2 3         12.7972
+!RIPPLE 16 ETX  0 1 3           18.3082
+!RIPPLE 16 ETX  0 2 3           17.7843
+
+#RIPPLE 1 ETX   0 1 3           8.36641
+#AFR 16 ETX     0 1 3           15.5294
+
+
+
+
+
+
+
+======================================================
+6Mbps BER=10^-5, NO HTP
+======================================================
+
+LPR            0     3         0.65385
+SPR            0 1 2 3         1.23896
+ETX            0 1 3           1.53916
+ETX            0 2 3           1.08803
+RIPPLE 1  SPR  0 1 2 3         1.61548
+RIPPLE 16 SPR  0 1 2 3         2.35239
+
+!!AFR 16         0 1 2 3        1.06597
+!!AFR 16         0 1 3          1.26950
+!RIPPLE 16 ETX  0 1 3           1.99539
+!RIPPLE 16 ETX  0 2 3           1.64262
+
+======================================================
+216/54Mbps BER=10^-5, NO HTP
+======================================================
+LPR            23.5523Mbps
+#AFR 16 frags,  86.5841Mbps
+======================================================
+
+LPR            0     3         0.75646
+SPR            0 1 2 3         7.55403
+ETX            0 1 3           8.19256
+ETX            0 2 3           3.51923
+RIPPLE 1 SPR   0 1 2 3         12.419
+RIPPLE 16 SPR  0 1 2 3         22.7815
+
+!!AFR 16 SPR     0 1 2 3         13.5361          NO HTP IS ESSENTIAL!!!
+!RIPPLE 16 ETX  0 1 3           20.1201 
+!RIPPLE 16 ETX  0 2 3           18.4368
+
+
+
+
+#RIPPLE 1 ETX   0 1 3           9.46710
+#AFR 16 ETX     0 1 3           20.5911
+
+
+
+
+
+
+
+======================================================
+216/54Mbps BER=10^-5, HTP, frag=16
+======================================================
+
+preExOR        0 1 2 3       2.32  
+preExOR        0 1 2 3
+               0 1 2 4       4.62=1.84/2.79
+preExOR        0 1 2 3
+               0 1 2 4
+               5 6 1 7       5.21=1.93/1.03/2.25
+======================================================
+216/54Mbps BER=10^-6, HTP, frag=16
+======================================================
+
+preExOR        0 1 2 3       18.4
+preExOR        0 1 2 3
+               0 1 2 4       23.3=11.9/11.5
+preExOR        0 1 2 3
+               0 1 2 4
+               5 6 1 7       25.9=7.09/11.6/7.25
+
+
+======================================================
+216/54Mbps BER=10^0, HTP, frag=1
+======================================================
+
+preExOR        0 1 2 3       5.83
+
